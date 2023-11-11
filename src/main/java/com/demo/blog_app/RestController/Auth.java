@@ -2,18 +2,18 @@ package com.demo.blog_app.RestController;
 
 import com.demo.blog_app.Entity.Role;
 import com.demo.blog_app.Entity.User;
+import com.demo.blog_app.Payload.JWTAuthResponse;
 import com.demo.blog_app.Payload.SignIn;
 import com.demo.blog_app.Payload.SignUp;
+import com.demo.blog_app.Security.JwtTokenProvider;
 import com.demo.blog_app.Service.RoleService;
 import com.demo.blog_app.Service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.neo4j.Neo4jProperties;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -29,6 +29,8 @@ public class Auth {
         private RoleService roleService;
         @Autowired
         private AuthenticationManager auth;
+        @Autowired
+        private JwtTokenProvider tokenProvider;
         //http://localhost:8080/blog/auth/setRole
     @PostMapping("/setRole")
     public ResponseEntity<?> setRole(@RequestBody Role role){
@@ -47,7 +49,9 @@ public class Auth {
         Authentication authentication = auth.authenticate(
                 new UsernamePasswordAuthenticationToken(signIn.getUsernameOrEmail(),signIn.getPassword()));
         SecurityContextHolder.getContext().setAuthentication(authentication);
-        return new ResponseEntity<>("success",HttpStatus.OK);
+
+       String token = tokenProvider.generateToken(authentication);
+        return new ResponseEntity<>(new JWTAuthResponse(token),HttpStatus.OK);
     }
 
 }

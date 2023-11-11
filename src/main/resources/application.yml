@@ -7,6 +7,7 @@ spring:
   # ===============================
   # = Datasource configurations
   # ===============================
+
   datasource:
     url: jdbc:mysql://127.0.0.1:3306/blog_app?createDatabaseIfNotExist=true
     username: root
@@ -72,3 +73,6 @@ logging:
   console:
     enabled: true # Enable or disable console output
 
+jwt:
+  secret-key: JWT_Token_Secret
+  expiration-milliseconds: 3600000
