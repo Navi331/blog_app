@@ -1,0 +1,74 @@
+# ===============================
+# = Spring configurations
+# ===============================
+spring:
+  application:
+    name: Blog Application
+  # ===============================
+  # = Datasource configurations
+  # ===============================
+  datasource:
+    url: jdbc:mysql://127.0.0.1:3306/blog_app?createDatabaseIfNotExist=true
+    username: root
+    password: Navi331
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+  jpa:
+    database-platform: org.hibernate.dialect.MySQL5Dialect
+    show-sql: true
+    generate-ddl: true
+
+
+    #=================================
+    # Hibernate Properties (auto, create, create-drop, validate, update, none)
+    #==================================
+    hibernate:
+      ddl-auto: update
+      dialect: org.hibernate.dialect.MySQL5Dialect
+      format_sql: true
+
+
+  # ===============================
+  # = Jackson configurations
+  # ===============================
+  jackson:
+    # ==================================
+    # = Fail on unknown JSON properties
+    # ==================================
+    deserialization:
+      fail-on-unknown-properties: true
+    # ==================================
+    # = Date format settings and timezone
+    # ==================================
+    date-format : yyyy-MM-dd HH:mm:ss
+    time-zone: Asia/Kolkata
+# ===============================
+# = Logging configurations
+# ===============================
+logging:
+  level:
+    root: INFO               # Set the root logger to INFO
+    com.hibernate.demo1: DEBUG  # Set your application package to DEBUG
+    org.springframework.web: INFO  # Set Spring Web to INFO
+    org.springframework.security: INFO  # Set Spring Security to INFO
+    org.springframework.web.socket: INFO # Set Spring Web Socket to DEBUG
+    org.hibernate.SQL: WARN  # Set Hibernate SQL queries to DEBUG
+    org.hibernate.type.descriptor.sql.BasicBinder: WARN  # Set Hibernate SQL binding to DEBUG
+    org.springframework.validation: DEBUG  # Set Spring Validation to TRACE
+    org.hibernate.validator: DEBUG  # Set Hibernate Validator to TRACE
+    org.apache.tomcat: INFO   # Set Tomcat's Tomcat logs to INFO
+  #    org.apache.catalina: INFO  # Set Tomcat's Catalina logs to INFO
+  #    org.apache.coyote: INFO   # Set Tomcat's Coyote logs to INFO
+
+  file: hibernate.log  # Set the log file name
+
+  max-size: 10MB  # Set the maximum log file size
+  max-history: 7   # Set the maximum number of log history files to keep
+
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
+    file: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
+
+  console:
+    enabled: true # Enable or disable console output
+
