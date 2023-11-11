@@ -8,6 +8,7 @@ import com.demo.blog_app.Payload.SignUp;
 import com.demo.blog_app.Security.JwtTokenProvider;
 import com.demo.blog_app.Service.RoleService;
 import com.demo.blog_app.Service.UserService;
+import com.demo.blog_app.Util.JwtTokenBlackListService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,6 +21,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 @RestController
 @RequestMapping("/blog/auth")
 public class Auth {
@@ -31,6 +35,8 @@ public class Auth {
         private AuthenticationManager auth;
         @Autowired
         private JwtTokenProvider tokenProvider;
+        @Autowired
+        private JwtTokenBlackListService blackListService;
         //http://localhost:8080/blog/auth/setRole
     @PostMapping("/setRole")
     public ResponseEntity<?> setRole(@RequestBody Role role){
@@ -52,6 +58,12 @@ public class Auth {
 
        String token = tokenProvider.generateToken(authentication);
         return new ResponseEntity<>(new JWTAuthResponse(token),HttpStatus.OK);
+    }
+    //http://localhost:8080/blog/auth/sign-out
+    @PostMapping("/sign-out")
+    public ResponseEntity<?> signOut(HttpServletRequest request){
+        String message = blackListService.blackList(request);
+        return new ResponseEntity<>(message,HttpStatus.OK);
     }
 
 }

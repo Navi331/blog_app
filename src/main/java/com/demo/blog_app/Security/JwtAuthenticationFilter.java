@@ -1,5 +1,6 @@
 package com.demo.blog_app.Security;
 
+import com.demo.blog_app.Util.JwtTokenBlackListService;
 import org.hibernate.annotations.Filter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -22,10 +23,12 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private JwtTokenProvider tokenProvider;
     @Autowired
     private CustomUserDetailService userDetailService;
+    @Autowired
+    private JwtTokenBlackListService tokenBlackListService;
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         String jwtToken = getJwtToken(request);
-        if(StringUtils.hasText(jwtToken)&&tokenProvider.validateToken(jwtToken)){
+        if(StringUtils.hasText(jwtToken)&&!tokenBlackListService.isBlackListed(jwtToken)&&tokenProvider.validateToken(jwtToken)){
             String userName = tokenProvider.getUserNameFromJWT(jwtToken);
             UserDetails userDetails =userDetailService.loadUserByUsername(userName);
 
